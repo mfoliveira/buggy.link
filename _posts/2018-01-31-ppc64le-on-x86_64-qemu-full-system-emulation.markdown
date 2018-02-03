@@ -7,6 +7,12 @@ date:	2018-01-31
 
 You can run a `ppc64le` virtual machine on your `x86_64` computer with QEMU full-system emulation!
 
+This provides an environment that is very similar to an original system,
+although with slower performance due to processor instruction emulation.
+
+It can be handy to run programs that are not processor intensive, and
+help a bit in growing your patience.
+
 ## QEMU
 
 Let's build the QEMU target for full-system emulation of the `ppc64le` architecture (`ppc64-softmmu`).
@@ -304,5 +310,5 @@ machine		: CHRP IBM pSeries (emulated by qemu)
 Yeehaw!
 
 It's indeed a bit slow, as that is full-system emulation, but it can very well
-be used to run small programs which are not processor intensive, just like the
+be used to run programs which are not processor intensive, just like the
 ones to learn and practice the basics about `ppc64le`. ;-)
