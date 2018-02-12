@@ -18,6 +18,7 @@ mostly about adventures in GNU/Linux and PowerPC servers.
 # links
 
 <ul>
+	<li><a href="{{ site.baseurl }}/contributions">Open Source Contributions</a></li>
 	<li>Email: mauricio.foliveira gmail com</li>
 	<li><a href="https://www.facebook.com/mauricio.foliveira">Facebook</a></li>
 	<li><a href="https://github.com/mfoliveira/">GitHub</a></li>
