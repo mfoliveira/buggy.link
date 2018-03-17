@@ -108,7 +108,12 @@ Cool, it's `ppc64le`!
 
 In order not to include the dynamic loader and `busybox` in commands, you can:
 
- - Copy the dynamic loader to `/lib` (does not affect other stuff):  
+ - Set the `QEMU_LD_PREFIX` environment variable (_ELF interpreter prefix_)  
+   to where `lib/ld-musl-powerpc64le.so.1` is (`$PWD)` or `./` in this example):  
+   `$ export QEMU_LD_PREFIX=$PWD`
+
+ - _UPDATE (2018-03-17) [the method above is preferred over this one]:_  
+   Copy the dynamic loader to `/lib` (does not affect other stuff):  
    `$ sudo cp lib/ld-musl-powerpc64le.so.1 /lib`
 
  - Create a symlink to `busybox` named after the function:  
