@@ -121,6 +121,26 @@ $ cp qemu-2.11.0/pc-bios/spapr-rtas.bin .
 $ cp qemu-2.11.0/pc-bios/slof.bin .
 ```
 
+_UPDATE (2018-03-17)_: another option is to configure the QEMU build with the `--firmwarepath` option,
+and copy the files over there; in this example:
+
+```
+$ ./configure --target-list=ppc64-softmmu --firmwarepath=$HOME/bin # don't use '~'
+...
+firmware path     /home/mfoliveira/bin
+...
+
+$ make -j$(nproc)
+...
+  LINK    ppc64-softmmu/qemu-system-ppc64
+
+$ cp ppc64-softmmu/qemu-system-ppc64 \
+     pc-bios/spapr-rtas.bin \
+     pc-bios/slof.bin \
+     ~/bin
+```
+
+
 And these QEMU options allow you to run without a couple of other files:
 
  - `-nodefaults`  
