@@ -17,7 +17,7 @@ And then you run it locally with an emulator (e.g., QEMU [full-system][qemu-full
 [user-mode][qemu-user] emulation)
 or remotely in real hardware (most people don't have `ppc64le` systems at home _yet!_).
 
-## Cross Compiler Packages and Tarballs
+# Distro Packages and Tarballs
 
 Several Linux distributions provide cross compiler packages for `ppc64le` (and `ppc64` -- big-endian,
 which is required sometimes).
@@ -25,18 +25,18 @@ which is required sometimes).
 For distros that don't, there are cross compiler _tarballs_ available from Bootlin (read on)!  
 And, of course, you can build your own, but that's not covered here for simplicity's sake. :-)
 
-The cross compiler packages and commands are usually named after the _target_ platform.  
+The cross compiler packages and commands are usually named after the [_target triplet_][gnu-triplet].  
 Packages usually have the tool name first, and commands the tool name last; for example:
 - `ppc64le`:
-  - Package: `gcc-powerpc64le-linux-gnu-gcc`
+  - Package: `gcc-powerpc64le-linux-gnu`
   - Command: `powerpc64le-linux-gnu-gcc`
 - `ppc64`:
-  - Package: `gcc-powerpc64-linux-gnu-gcc`
+  - Package: `gcc-powerpc64-linux-gnu`
   - Command: `powerpc64-linux-gnu-gcc`
 
 Check if your distro is listed here and install its packages, otherwise use the tarball for any distro.
 
-### Packages for Ubuntu 16.04 LTS
+## Packages for Ubuntu 16.04 LTS
 
 Search:
 
@@ -71,7 +71,7 @@ $ which powerpc64{le,}-linux-gnu-{gcc,ld,objdump}
 /usr/bin/powerpc64-linux-gnu-objdump
 ```
 
-### Packages for Fedora 27
+## Packages for Fedora 27
 
 Search:
 
@@ -104,7 +104,7 @@ $ which powerpc64{le,}-linux-gnu-{gcc,ld,objdump}
 /usr/bin/powerpc64-linux-gnu-objdump
 ```
 
-### Packages for RHEL/CentOS 7
+## Packages for RHEL/CentOS 7
 
 Search:
 
@@ -118,7 +118,7 @@ gcc-powerpc64-linux-gnu.x86_64 : Cross-build binary utilities for powerpc64-linu
 
 Note: those compilers are _bi-endian_ (i.e., compile _both_ little-endian and big-endian),
 but the utilities (e.g., assembler, linker, object dump) are _endian-specific_.
-So, it's required to install the _little-endian_ binutils too.
+So, it's required to install the _little-endian_ binutils too, as it's not installed automatically
 
 Install:
 
@@ -139,7 +139,7 @@ $ which powerpc64-linux-gnu-gcc powerpc64{le,}-linux-gnu-{ld,objdump}
 
 
 
-### Tarballs for Any Distro
+## Tarballs for Any Distro
 
 You can use the cross compilers provided by [Bootlin](https://bootlin.com) (formerly Free Electrons)
 at [toolchains.bootlin.com](https://toolchains.bootlin.com).
@@ -152,17 +152,16 @@ It's possible to select some parameters of the cross compiler to download (**awe
 Download from the generated link, and extract; for example:
 
 ```
-$ cd ~/bin
 $ wget https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2018.02-2.tar.bz2
-$ tar xf powerpc64le-power8--glibc--stable-2018.02-2.tar.bz2
+$ tar xf powerpc64le-power8--glibc--stable-2018.02-2.tar.bz2 -C ~/bin/
 
-$ # optional, just for `which`
 $ export PATH=$PATH:~/bin/powerpc64le-power8--glibc--stable-2018.02-2/bin/
 ```
 
 Check:
 
-Note: these cross compiler commands don't have `gnu` in the file name.
+Note: these cross compiler commands don't have `gnu` in the file name.  
+(it happens to help, as that doesn't conflict with distro's package commands.)
 
 ```
 $ which powerpc64le-linux-{gcc,ld,objdump}
@@ -171,7 +170,7 @@ $ which powerpc64le-linux-{gcc,ld,objdump}
 ~/bin/powerpc64le-power8--glibc--stable-2018.02-2/bin/powerpc64le-linux-objdump
 ```
 
-## Example: Assembly Testcase and QEMU user-mode emulation
+# Example in Assembly & QEMU
 
 Consider this simple test program to just return `42`.  
 It's written in assembly, so it doesn't need the C standard library (to avoid distro differences, for starters).
@@ -191,10 +190,12 @@ _start:				# implement symbol '_start' (program entry point)
 ```
 
 Cross-compile it with the GNU assembler (`as`) and the GNU linker (`ld`):
+
 ```
 $ powerpc64le-linux-gnu-as return_42.s -o return_42.o
 $ powerpc64le-linux-gnu-ld return_42.o -o return_42
 ```
+(cross-compiler tarball: use the `powerpc64le-linux-{as,ld}` commands -- no `gnu` -- instead.)
 
 Check it:
 
@@ -216,7 +217,7 @@ Excellent!
 Now let's move to C.
 
 
-## Example: C Testcase and QEMU user-mode emulation
+# Example in C & QEMU
 
 
 Consider this simple test program that just returns `42`:  
@@ -245,7 +246,7 @@ Okay, it works.
 Now, let's cross-compile and run it.  
 This varies with the distro as each distro provide more or less content (e.g., library support) in its _cross_ packages.
 
-### Cross-compile on Ubuntu 16.04 LTS
+## Cross-compile on Ubuntu 16.04 LTS
 
 Let's start with Ubuntu 16.04 as it provides a lot of cool, cross stuff. :)
 
@@ -270,8 +271,8 @@ $ qemu-ppc64le return_42
 ```
 
 Uh-oh. It's missing the dynamic loader, from the C library.  
-There are 2 options: 1) built it _statically-linked_; 2) get the dynamic loader.  
-Let's do both.
+There are 2 options: either 1) build it _statically-linked_; **or** 2) get the dynamic loader.  
+Let's do _both_!
 
 - 1) Build it statically-linked:
 
@@ -331,8 +332,7 @@ $ echo $?
 
 And it runs fine now! ;-)
 
-### Cross-compile on Fedora 27 and RHEL/CentOS 7
-
+## Cross-compile on Fedora 27 and RHEL/CentOS 7
 
 Cross-compile the program with GNU C Compiler (`gcc`):
 
@@ -421,8 +421,62 @@ $ echo $?
 
 Success!
 
+## Cross-crompile on Any Distro (Tarball)
 
-## Considerations
+Cross-compile the program with GNU C Compiler (`gcc`) of the cross-compiler tarball:
+
+```
+$ powerpc64le-linux-gcc -o return_42 return_42.c
+```
+
+Check it's a `ppc64le` program:
+
+```
+$ file return_42
+return_42: ELF 64-bit LSB executable, 64-bit PowerPC [...] 
+```
+
+Run it with QEMU user-mode emulation:
+
+```
+$ qemu-ppc64le return_42
+/lib64/ld64.so.2: No such file or directory
+```
+
+Ah, the dynamic loader again. Fortunately the cross compiler tarball provides libraries! :)
+
+```
+$ find ~/bin/powerpc64le-power8--glibc--stable-2018.02-2/ -name ld64.so.2
+[...]/powerpc64le-power8--glibc--stable-2018.02-2/powerpc64le-buildroot-linux-gnu/sysroot/lib/ld64.so.2
+
+$ export QEMU_LD_PREFIX=~/bin/powerpc64le-power8--glibc--stable-2018.02-2/powerpc64le-buildroot-linux-gnu/sysroot/
+```
+
+- Fedora 27 / Ubuntu 16.04 LTS:
+
+```
+$ qemu-ppc64le return_42
+
+$ echo $?
+42
+```
+
+- RHEL/CentOS 7:
+
+Well, the distro kernel is older than the executable's built-in kernel version restriction, so it fails:
+```
+$ qemu-ppc64le return_42
+FATAL: kernel too old
+
+$ file return_42
+return_42: ELF 64-bit LSB executable, 64-bit PowerPC [...] for GNU/Linux 4.1.0 [...]
+
+$ uname -r
+3.10.0-[...]
+```
+Sad but good to know. :-)
+
+# Considerations
 
 Most cross compilers (particularly the ones provided by Linux distros) usually lack the C standard
 library and other libraries.  This limits what can be compiled -- for example, what about `printf()` for debugging?
@@ -442,5 +496,5 @@ In the next posts we'll cross compile and run the Linux kernel and the OPAL firm
 [wikipedia-cross-compiler]: https://en.wikipedia.org/wiki/Cross_compiler
 [qemu-full]: {{ site.baseurl }}{% post_url 2018-01-31-ppc64le-on-x86_64-qemu-full-system-emulation %}
 [qemu-user]: {{ site.baseurl }}{% post_url 2018-02-03-ppc64le-on-x86_64-qemu-user-mode-emulation %}
-
+[gnu-triplet]: https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Specifying-Target-Triplets.html
 
