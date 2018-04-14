@@ -1,4 +1,4 @@
-## mfoliveira.github.io
+## https://buggy.link
 
 - Built on Jekyll
 - Pushed to GitHub at https://github.com/mfoliveira/mfoliveira.github.io
