@@ -5,7 +5,7 @@ title: hello world
 # about
 
 This is the blog of Mauricio Faria de Oliveira,  
-mostly about adventures in GNU/Linux and PowerPC servers.
+mostly about adventures in GNU/Linux.
 
 # blog
 
