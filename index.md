@@ -23,7 +23,6 @@ mostly about adventures in GNU/Linux.
 	<li>IRC: mfo @ irc.freenode.net, irc.oftc.net </li>
 	<li><a href="https://www.facebook.com/mauricio.foliveira">Facebook</a></li>
 	<li><a href="https://github.com/mfoliveira/">GitHub</a></li>
-	<li><a href="https://plus.google.com/+MauricioFariaDeOliveira">Google+</a></li>
 	<li><a href="https://www.linkedin.com/in/mauriciofariadeoliveira/">LinkedIn</a></li>
 	<li><a href="{{ '/feed.xml' | relative_url }}">RSS</a></li>
 </ul>
